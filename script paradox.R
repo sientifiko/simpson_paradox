@@ -26,6 +26,15 @@ ggplot(etnicidad, aes(reorder(Ethnicity, -media), media, fill = Gender)) +
         legend.position = "top") +
   labs(x="", y = "Media de gastos")
 
+# graficando por boxplot
+ggplot(data, aes(reorder(Ethnicity, -Expenditures), Expenditures, fill = Gender)) +
+  theme_light() +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), 
+        legend.position = "top") +
+  labs(x="", y = "Media de gastos")
+
+
 # ploteando cantidad por etnicidad
 ggplot(etnicidad, aes(reorder(Ethnicity, -n), n, fill = Gender)) +
   theme_light() +
@@ -54,6 +63,15 @@ ggplot(etnicidad2, aes(reorder(Ethnicity, -media), media, fill = Gender)) +
   labs(x="", y = "Media de gastos")
 
 
+# graficando por boxplot de etnias mayoritarias
+ggplot(data2, aes(reorder(Ethnicity, -Expenditures), Expenditures, fill = Gender)) +
+  theme_light() +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), 
+        legend.position = "top") +
+  labs(x="", y = "Media de gastos")
+
+
 # relación entre edad y gastos
 ggplot(data2, aes(Age, Expenditures)) +
   theme_light() +
@@ -69,6 +87,19 @@ ggplot(data2, aes(Age.Cohort, Expenditures, colour = Ethnicity)) +
   # stat_summary(fun = "mean", color="red", geom = "line", group = 1)
   theme(legend.position = "top") +
   labs(x= "Cohorte etario", y = "Gastos")
+
+# grafiquemos lo mismo per con promedios
+age.etn <- data2 %>% 
+  group_by(Age.Cohort, Ethnicity) %>%
+  summarize(n= n(), media = mean(Expenditures))
+
+# aca ponemos la gráfica de la tabla de arriba
+ggplot(age.etn, aes(Age.Cohort, media, fill = Ethnicity)) +
+  theme_light() +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0), 
+        legend.position = "top") +
+  labs(x="", y = "Media de gastos")
 
 
 # test de significancia estadística
