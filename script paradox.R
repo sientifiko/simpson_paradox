@@ -15,13 +15,15 @@ data$Age.Cohort <- factor(data$Age.Cohort, levels(data$Age.Cohort)[c(1, 6, 3, 4,
 # agrupando por etnicidad y promedio de gastos
 etnicidad <- data %>% 
   group_by(Ethnicity, Gender) %>%
-  summarize(n= n(), media = mean(Expenditures))
+  summarize(n= n(), media = mean(Expenditures), desv = sd(Expenditures))
 
 
 # ploteando promedio por etnicidad
 ggplot(etnicidad, aes(reorder(Ethnicity, -media), media, fill = Gender)) +
   theme_light() +
   geom_bar(stat = "identity", position = "dodge") +
+  geom_errorbar(aes(ymin =media, ymax=media+desv), width=.2,
+                position=position_dodge(.9)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1), 
         legend.position = "top") +
   labs(x="", y = "Media de gastos")
@@ -51,13 +53,17 @@ data2 <- data %>% filter(Ethnicity=="Hispanic" | Ethnicity== "White not Hispanic
 # agrupando por etnicidad y promedio de gastos de grupos mayoritarios
 etnicidad2 <- data2 %>% 
   group_by(Ethnicity, Gender) %>%
-  summarize(n= n(), media = mean(Expenditures))
+  summarize(n= n(), 
+            media = mean(Expenditures),  
+            desv = sd(Expenditures))
 
 
 # ploteando promedio de gasto por etnias mayoritarias
 ggplot(etnicidad2, aes(reorder(Ethnicity, -media), media, fill = Gender)) +
   theme_light() +
   geom_bar(stat = "identity", position = "dodge") +
+  geom_errorbar(aes(ymin = media, ymax=media+desv), width=.2,
+                position=position_dodge(.9)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0), 
         legend.position = "top") +
   labs(x="", y = "Media de gastos")
@@ -91,12 +97,15 @@ ggplot(data2, aes(Age.Cohort, Expenditures, colour = Ethnicity)) +
 # grafiquemos lo mismo per con promedios
 age.etn <- data2 %>% 
   group_by(Age.Cohort, Ethnicity) %>%
-  summarize(n= n(), media = mean(Expenditures))
+  summarize(n= n(), media = mean(Expenditures),
+            desv = sd(Expenditures))
 
 # aca ponemos la gráfica de la tabla de arriba
 ggplot(age.etn, aes(Age.Cohort, media, fill = Ethnicity)) +
   theme_light() +
   geom_bar(stat = "identity", position = "dodge") +
+  geom_errorbar(aes(ymin =media, ymax=media+desv), width=.2,
+                position=position_dodge(.9)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0), 
         legend.position = "top") +
   labs(x="", y = "Media de gastos")
